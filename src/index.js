@@ -1,6 +1,7 @@
 import express from "express"
 import "dotenv/config"
 import cors from "cors"
+import { connectToDb } from "./db/index.js";
 
 
 // intializing basic express app
@@ -31,7 +32,12 @@ app.use(cors({
 
 const PORT = process.env.PORT || 3000;
 
+// async function, port starts listening only on successfull db connection
+(async () => {
 
-app.listen(PORT, () => {
+    await connectToDb()         // either, connects, or process exits throwing error.
+    app.listen(PORT, () => {
     console.log(`Server active at ${process.env.BASE_URL}:${PORT}`);
-})
+    })
+
+})()            // IIFE
